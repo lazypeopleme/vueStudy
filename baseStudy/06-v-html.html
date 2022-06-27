@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="lib/vue.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      ul {
+        display: flex;
+        list-style: none;
+      }
+      ul > li {
+        flex: 1;
+        width: 33%;
+        height: 50px;
+        text-align: center;
+        line-height: 50px;
+      }
+      li.active {
+        background-color: green;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="box">
+      <ul>
+        <li
+          v-for="(data,index) in dataList"
+          :class="index===current?'active':''"
+          @mouseenter="enter(index)"
+          @mouseleave="enter(-1)"
+        >
+          {{data}}
+        </li>
+      </ul>
+      <!-- 文本 -->
+      <div>{{myText}}</div>
+      <!-- 纯html，防止xss、csrf攻击 用于解析安全可靠的后端传来的代码数据(前端过滤；后端转义；给cookie加上http)-->
+      <div v-html="myHtml"></div>
+    </div>
+    <script>
+      new Vue({
+        el: "#box",
+        data: {
+          current: -1,
+          dataList: ["首页", "列表", "我的"],
+          myText: "<b>加粗</b>",
+          myHtml: `  <div class="movie-item">
+      <a href="/films/1298049" target="_blank" data-act="playingMovie-click" data-val="{movieid:1298049}">
+        <div class="movie-poster">
+          <img class="poster-default" src="//s3plus.meituan.net/v1/mss_e2821d7f0cfe4ac1bf9202ecf9590e67/cdn-prod/file:5788b470/image/loading_2.e3d934bf.png" />
+          <img class="movie-poster-img" data-src="https://p0.pipi.cn/mmdb/25bfd69a030338ddd2300b1f3b191305438ba.jpg?imageView2/1/w/160/h/220" alt="密室逃生2电影海报" />
+          <div class="movie-overlay movie-overlay-bg">
+            <div class="movie-info">
+              <div class="movie-score"><i class="integer">8.</i><i class="fraction">3</i></div>
+              <div class="movie-title movie-title-padding"
+                title="密室逃生2" >密室逃生2</div>
+            </div>
+          </div>
+        </div>
+      </a>
+<div class="movie-detail movie-detail-strong movie-sale">
+  <a href="/cinemas?movieId=1298049"
+  class="active" target="_blank" data-act="salePlayingMovie-click" data-val="{movieid:1298049}" >购 票</a>
+</div>`,
+        },
+        methods: {
+          enter(ind) {
+            this.current = ind;
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

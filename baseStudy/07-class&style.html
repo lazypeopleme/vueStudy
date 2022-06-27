@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="lib/vue.js"></script>
+    <style>
+      .box {
+        height: 50px;
+        width: 200px;
+        text-align: center;
+        line-height: 50px;
+        cursor: pointer;
+      }
+      .aa {
+        background-color: blue;
+        color: yellow;
+      }
+      .bb {
+        background-color: aqua;
+        color: rgb(166, 0, 255);
+      }
+      .cc {
+        background-color: brown;
+        color: rgb(93, 162, 66);
+      }
+      .dd {
+        background-color: black;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="box">
+      <div class="box" :class="classObj" @click="changeBgColor">
+        动态切换class
+      </div>
+      <div class="box" :class="classArr" @click="changeColor">
+        动态切换class
+      </div>
+      <br />
+      <div :style="styleObj" @click="changeStyle">动态切换style</div>
+      <div :style="styleArr" @click="changeStyleArr">动态切换style</div>
+    </div>
+    <script>
+      var vm = new Vue({
+        el: "#box",
+        data: {
+          classObj: { aa: true, bb: false, cc: false },
+          classArr: ["aa", "bb"],
+          styleObj: { fontSize: "12px" },
+          styleArr: [{ backgroundColor: "pink" }],
+        },
+        methods: {
+          changeBgColor() {
+            // this.classObj.bb=true;
+            // console.log(this.classObj); // dd没有被Object.defineProperty拦截
+            // this.classObj.dd = true; // dd没有被塞进class里，这是vue2的缺点，不在data里被初始化的属性不会再被拦截
+            Vue.set(this.classObj, "dd", true); // 可通过Vue.Set(classObj,'dd',true)解决该问题||或改用数组设置动态样式；vue3优化了该点，增加了动态添加属性的拦截
+          },
+          changeColor() {
+            this.classArr.push("cc"); //用数组设置动态样式
+          },
+          changeStyle() {
+            // this.styleObj.fontSize = "30px";
+            this.styleObj.color = "red"; //动态添加属性未被拦截
+          },
+          changeStyleArr() {
+            this.styleArr.push({ backgroundColor: "green", fontSize: "25px" }); //用数组设置动态样式
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

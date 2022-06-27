@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <!-- <script src="lib/vue.js"></script> -->
+    <script src="lib/vue.next.js"></script>
+  </head>
+  <body>
+    <div id="box">{{myName}}</div>
+    <script>
+      // vue2的初始化
+      //   new Vue({
+      //     el: "#box",
+      //     data: {},
+      //     methods: {},
+      //   });
+
+      // vue3的初始化
+      //   data组件都是vue的实例，组件共享data属性，当data的值是用一个引用类型的时候，改变其中的值会影响到其他的（不同组件不能用同名属性，被覆盖）
+      //   组件中的data写成一个函数，数据以函数返回值的形式定义，这样每次复用组件，都会返回一份新的data，类似于给没个组件实例创建一个私有的数据空间，让各个组件实例维护各自的数据。
+      var vm = {
+        // 不同组件可以用同名属性
+        data() {
+          return {
+            myName: "hl",
+          };
+          methods: {
+          }
+        },
+      };
+      Vue.createApp(vm).mount("#box");
+    </script>
+  </body>
+</html>

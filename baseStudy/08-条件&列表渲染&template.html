@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="lib/vue.js"></script>
+  </head>
+  <body>
+    <div id="box">
+      <!-- 条件渲染 -->
+      <ul>
+        <li v-for="item in list">
+          {{item.data}}
+          <span v-if="item.status===0">待发货</span>
+          <span v-else-if="item.status===1">已发货</span>
+          <span v-else-if="item.status===2">待收货</span>
+          <span v-else>已收货</span>
+        </li>
+      </ul>
+
+      <!-- template 不破坏所包含dom树与其上级节点的层级关系起到dom块处理作用，浏览器观察elements-->
+      <template v-if="isCreated">
+        <div>aaa</div>
+        <div>bbb</div>
+        <div>ccc</div>
+      </template>
+
+      <!-- 列表渲染 -->
+    </div>
+    <script>
+      new Vue({
+        el: "#box",
+        data: {
+          isCreated: true,
+          list: [
+            { data: "111", status: 0 }, // 待发货
+            { data: "222", status: 1 }, // 已发货
+            { data: "333", status: 2 }, // 待收货
+            { data: "444", status: 3 }, // 已收货
+          ],
+        },
+        methods: {},
+      });
+    </script>
+  </body>
+</html>

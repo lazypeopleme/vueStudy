@@ -14,12 +14,12 @@
       <button @click="handleSearch">search</button>
       <button @click="handleAdd">add</button>
       <button @click="handleClear">clear</button>
-      <ul v-show="datalist.length>0">
+      <ul v-if="datalist.length>0">
         <li v-for="(item,index) in datalist" v-if="item.isShow||!inputText">
           {{item.value}} <button @click="handleDel(index)">del</button>
         </li>
       </ul>
-      <div v-show="datalist.length===0"></div>
+      <div v-else>无待办事项</div>
     </div>
     <script>
       new Vue({
