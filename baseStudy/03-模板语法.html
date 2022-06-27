@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="lib/vue.js"></script>
+    <style>
+        .red{
+            background-color: red;
+        }
+        .yellow{
+            background-color: yellow;
+        }
+    </style>
+</head>
+<body>
+    <div id="box">
+        {{myname+":"+myage}}
+        <!--冒号（：）动态绑定属性 @动态绑定事件-->
+        <div :class="bColor">{{isColor?'red':'yellow'}}</div>
+        <button @click="handleChange()">change</button>
+    </div>
+    <script>
+        new Vue({
+            // 挂载vue实例
+            el:'#box',
+            // 属性
+            data:{
+                myname:'yy',
+                myage:18,
+                bColor:'red',
+                isColor:true
+            },
+            // 方法
+            methods:{
+                handleChange(){
+                    this.myname='hl';
+                    this.myage=24;
+                    this.isColor=!this.isColor;
+                    this.bColor=this.isColor?'red':'yellow';
+                }
+            }
+        })
+    </script>
+</body>
+</html>

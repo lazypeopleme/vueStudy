@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="lib/vue.js"></script>
+  </head>
+  <body>
+    <div id="box">
+      <!-- v-model 数据双向绑定，绑定input的value值 -->
+      <input type="text" v-model="inputText" />
+      <button @click="handleSearch">search</button>
+      <button @click="handleAdd">add</button>
+      <button @click="handleClear">clear</button>
+      <ul v-show="datalist.length>0">
+        <li v-for="(item,index) in datalist" v-if="item.isShow||!inputText">
+          {{item.value}} <button @click="handleDel(index)">del</button>
+        </li>
+      </ul>
+      <div v-show="datalist.length===0"></div>
+    </div>
+    <script>
+      new Vue({
+        el: "#box",
+        data: {
+          inputText: "",
+          datalist: [
+            { isShow: true, value: "111" },
+            { isShow: true, value: "aaa" },
+            { isShow: true, value: "dbf" },
+            { isShow: true, value: "bbb" },
+          ],
+        },
+        methods: {
+          handleAdd() {
+            if (this.inputText) {
+              this.datalist.push({ isShow: true, value: this.inputText });
+              this.inputText = "";
+            }
+          },
+          handleDel(ind) {
+            this.datalist.splice(ind, 1);
+          },
+          handleClear() {
+            this.inputText = "";
+          },
+          handleSearch() {
+            this.datalist.forEach((ele, ind) => {
+                // 字符串的search方法，没找到返回-1
+                console.log(ele.value.search(this.inputText));
+              this.datalist[ind].isShow =
+                ele.value.search(this.inputText) === -1 ? false : true;
+            });
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

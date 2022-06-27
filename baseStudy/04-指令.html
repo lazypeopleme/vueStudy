@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="lib/vue.js"></script>
+    <style>
+      .red {
+        background-color: red;
+      }
+      .yellow {
+        background-color: yellow;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="box">
+      <!-- v-bind: 绑定属性-->
+      <div :class="red">red</div>
+      <div v-bind:class="yellow">yellow</div>
+      <!-- v-on: 绑定事件和方法-->
+      <button @click="handleChange()">change</button>
+      <button v-on:click="handleChange()">change</button>
+
+      <!-- v-show dom的显示与隐藏-->
+      <div v-show="iShow">显示与隐藏</div>
+      <!-- v-if dom的创建与删除-->
+      <div v-if="iCreated">创建与删除</div>
+
+      <!-- v-for 数组的遍历-->
+      <ul>
+        <li v-for="(item,index) in list">{{item}}-{{index}}</li>
+      </ul>
+    </div>
+    <script>
+      new Vue({
+        el: "#box",
+        data: {
+          red:'red',
+          yellow:'yellow',
+          iShow: true,
+          iCreated: false,
+          list: ["aa", "bb", "cc"],
+        },
+        methods: {
+          handleChange() {},
+        },
+      });
+    </script>
+  </body>
+</html>

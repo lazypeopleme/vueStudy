@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>vue原理</title>
+    <!--vue不支持IE8及更低版本的浏览器-->
+  </head>
+  <body>
+    <div id="box"></div>
+    <script>
+      var box = document.getElementById("box");
+      var obj = {};
+      // vue通过Object.defineProperty创建对象属性，通过其get、set方法实现页面的动态响应
+      Object.defineProperty(obj, "name", {
+        get() {
+            // 访问obj的name属性时触发该方法
+            console.log('get');
+            // return box.innerHTML;
+        },
+        set(value) {
+            // value是修改后的name属性值
+            console.log('set',value);
+            // 改变创建的对象属性时触发该方法，可在该方法里操作dom
+            box.innerHTML=value;
+        },
+      });
+    </script>
+  </body>
+</html>
