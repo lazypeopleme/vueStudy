@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="lib/vue.js"></script>
+  </head>
+  <body>
+    <div id="box">
+      <!-- vue的按键修饰符 .enter .space .esc .up .down .left .right .shift .delete ...... -->
+      <input type="text" @keyup.enter.ctrl="handleEnter" />
+      <!-- 直接用键码 -->
+      <input type="text" @keyup.13="handleEnter" />
+    </div>
+    <script>
+      new Vue({
+        el: "#box",
+        data: {},
+        methods: {
+          handleEnter(e) {
+            // js通过已知键码判断相应按键类别
+            console.log(e);
+            // 回车时触发，enter的键码是13
+            if (e.keyCode === 13) {
+              console.log("enter", e.target.value);
+            } // 按esc时触发，键码是192
+            if (e.keyCode === 192) {
+              console.log("esc", e.target.value);
+            }
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

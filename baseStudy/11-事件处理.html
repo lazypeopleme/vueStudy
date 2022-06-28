@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="lib/vue.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      .loginPage {
+        width: 400px;
+        height: 400px;
+        border: 1px black solid;
+        position: relative;
+      }
+      .loginBox-out {
+        width: 402px;
+        height: 402px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: rgba(0, 0, 0, 0.33);
+      }
+      .loginBox-bg {
+        width: 402px;
+        height: 402px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: rgba(0, 0, 0, 0.33);
+      }
+      .loginBox-content {
+        width: 280px;
+        height: 280px;
+        position: absolute;
+        top: 51px;
+        left: 51px;
+        padding: 10px;
+        text-align: center;
+        background-color: #fff;
+      }
+      .loginBtn {
+        width: 80px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="box">
+      <div>
+        <!-- 默认传参 -->
+        <button @click="handleAdd1">+</button>
+        <!-- 自定义传参 -->
+        <button @click="handleAdd2(1,2)">+</button>
+        <!-- event对象固定在第一个形参位置，固定为“$eve”写法才能被获取 -->
+        <button @click="handleAdd3($event,1,2)">+</button>
+      </div>
+      <!-- 事件修饰符：.stop .self .once .prevent .capture -->
+      <!-- .self 只有自身触发自身事件，不被冒泡等外界事件影响 -->
+      <ul @click.self="handleUlClick">
+        <!-- .stop 阻止事件冒泡 -->
+        <li @click.stop="handleLiClick">111</li>
+        <!-- 只触发一次 -->
+        <li @click.once="handleLiClick">222</li>
+        <li @click="handleLiClick">333</li>
+      </ul>
+
+      <!-- 案例实践 -->
+      <div class="loginPage">
+        <button @click="isShowMethod">show</button>
+        <div class="loginBox-out" v-show="isShow">
+          <div class="loginBox-bg" @click.self="isShowMethod">
+            <div class="loginBox-content">
+              <div style="margin-bottom: 6px; margin-top: 60px">
+                用户名：<input type="text" v-model="userName" />
+              </div>
+              <div style="margin-bottom: 16px">
+                密&nbsp&nbsp&nbsp码：<input type="text" v-model="passWord" />
+              </div>
+              <button class="loginBtn" @click="handleLogin">登录</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- .prevent 阻止默认行为 如链接的跳转：满足校验条件再允许跳转-->
+      <a href="http://www.baidu.com" @click.prevent>百度</a>
+    </div>
+    <script>
+      new Vue({
+        el: "#box",
+        data: {
+          count: 0,
+          isShow: true,
+          userName: "",
+          passWord: null,
+        },
+        methods: {
+          isShowMethod() {
+            console.log("isShow");
+            this.isShow = !this.isShow;
+            if (this.userName & this.passWord) {
+              this.userName = "";
+              this.passWord = "";
+            }
+          },
+          handleLogin() {
+            // 触发冒泡：isShowMethod会执行，使用.self阻止
+            console.log("btn");
+            if (this.userName & this.passWord) {
+              this.isShowMethod();
+            }
+          },
+          handleAdd1(evt) {
+            console.log(evt);
+            this.count++;
+          },
+          handleAdd2(a, b) {
+            console.log(a, b);
+            this.count = +a * b;
+          },
+          handleAdd1(evt, a, b) {
+            console.log(evt, a, b);
+          },
+          handleUlClick() {
+            console.log("ul");
+          },
+          handleLiClick(e) {
+            // 冒泡：触发子节点事件，父节点该事件也会被触发，及触发效果往上像冒泡似的连带效果
+            // 组织冒泡：1. event.stopPropagation 2. 事件修饰符
+            console.log("li");
+            // e.stopPropagation();
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

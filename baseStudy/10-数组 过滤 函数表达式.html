@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="lib/vue.js"></script>
+  </head>
+  <body>
+    <div id="box">
+      <!-- 影响原数组发生变动的方法：push() pop() shift() unshift() reverse() splice() sort() -->
+      <!-- 返回新数组，原数组无变化：concat() filter() slice() map() -->
+      <!-- 不能检测数组的变化：arr[index]='newVal'，可使用Vue.set()或splice()解决 vue2用索引值动态修改数组的拦截，vue3已优化-->
+
+      <!-- input事件就是在输入框输入时触发；change事件是输入框输完失焦后且value值前后不同才触发 -->
+      <input
+        type="text"
+        @input="handleInput"
+        @change="handleChange"
+        v-model="inputText"
+      />
+      <!-- foreach第一种 -->
+      <ul>
+        <li v-for="(item,index) of arr" :key="index" v-show="item.status===1">
+          {{item.text}}
+        </li>
+      </ul>
+      <!-- filter第二种 -->
+      <ul>
+        <li v-for="(item,index) of list" :key="index">{{item.text}}</li>
+      </ul>
+      <!-- filter第三种 -->
+      <ul>
+        <li v-for="(item,index) of test()" :key="index">{{item.text}}</li>
+      </ul>
+      <!-- 第四种函数表达式 -->
+      <ul>
+        <li
+          v-for="(item,index) of list"
+          :key="index"
+          v-show="item.text.includes(inputText)"
+        >
+          {{item.text}}
+        </li>
+      </ul>
+    </div>
+    <script>
+      let initList = [
+        { status: 1, text: "11" },
+        { status: 1, text: "12" },
+        { status: 1, text: "13" },
+        { status: 1, text: "23" },
+        { status: 1, text: "33" },
+      ];
+      new Vue({
+        el: "#box",
+        data: {
+          inputText: "",
+          arr: initList,
+          list: initList,
+        },
+        methods: {
+          handleInput(e) {
+            var oldVal = e.target.value;
+            // 第一种
+            // this.arr.forEach((ele, index) => {
+            //   if (!oldVal) this.arr[index].status = 1;
+            //   else this.arr[index].status = ele.text.search(oldVal) === -1 ? 0 : 1;
+            // });
+
+            // 第二种
+            this.list = this.arr.filter((ele) => ele.text.includes(oldVal));
+          },
+          handleChange(e) {
+            console.log(e.target);
+            var oldVal = e.target.value;
+          },
+          test() {
+            return this.arr.filter((ele) => ele.text.includes(this.inputText));
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

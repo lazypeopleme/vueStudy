@@ -28,6 +28,19 @@
       </template>
 
       <!-- 列表渲染 -->
+      <!-- v-for in/of 都可以遍历数组和对象-->
+      <!-- item是元素，index是元素下标 -->
+      <ul>
+        <li v-for="(item,index) of arr">{{index}}-{{item}}</li>
+      </ul>
+      <!-- value是键值，key是键名 -->
+      <ul>
+        <li v-for="(value,key) of obj">{{key}}-{{value}}</li>
+      </ul>
+      <!-- 数字顺序增加1-10 -->
+      <ul>
+        <li v-for="v of 10">{{v}}</li>
+      </ul>
     </div>
     <script>
       new Vue({
@@ -40,6 +53,8 @@
             { data: "333", status: 2 }, // 待收货
             { data: "444", status: 3 }, // 已收货
           ],
+          arr: ["11", "12", "13", "14"],
+          obj: { a: 1, b: 2, c: 3, d: 4 },
         },
         methods: {},
       });
