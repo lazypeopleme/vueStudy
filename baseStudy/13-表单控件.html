@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="lib/vue.js"></script>
+  </head>
+  <body>
+    <div id="box">
+      文本域：<textarea v-model="content" id="" cols="30" rows="2"></textarea>
+      <div>
+        用户名：<input type="text" v-model="userName" />
+        <input type="checkbox" v-model="isRemember" />记住用户名
+      </div>
+
+      <div>
+        兴趣爱好：
+        <input type="checkbox" v-model="checkList" value="vue" />vue
+        <input type="checkbox" v-model="checkList" value="react" />react
+        <input type="checkbox" v-model="checkList" value="wx" />小程序
+        {{checkList}}
+      </div>
+      <div>
+        性别：
+        <input type="radio" v-model="select" value="male" />男
+        <input type="radio" v-model="select" value="female" />女 {{select}}
+      </div>
+      <button @click="login">登录</button>
+    </div>
+    <script>
+      /*
+      vue属于mvvm(model view view model)架构模式，即数据视图双向绑定
+       */
+
+      new Vue({
+        el: "#box",
+        data: {
+          userName: "",
+          content: "",
+          isRemember: false,
+          checkList: [],
+          select: "male",
+        },
+        methods: {
+          login() {
+            if (this.userName & this.isRemember) {
+              // localStorage：在相同的协议、相同的主机名、相同的端口下，就能读取/修改到同一份localStorage数据
+              // localStorage理论上来说是永久有效的，即不主动清空的话就不会消失，即使保存的数据超出了浏览器所规定的大小，也不会把旧数据清空而只会报错
+              // sessionStorage：协议、主机名、端口都相同，还要求在同一窗口（也就是浏览器的标签页）下；关闭浏览器即清空数据
+              localStorage.setItem("userName", this.userName);
+              console.log(localStorage.getItem("userName"));
+            }
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

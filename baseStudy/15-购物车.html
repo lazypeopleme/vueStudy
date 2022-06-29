@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="lib/vue.next.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      ul {
+        list-style: none;
+      }
+      .shopping-cart {
+        padding: 30px;
+      }
+      .shopping-list {
+        width: 800px;
+        padding: 30px;
+      }
+      .goods {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        background-color: #f4f2f0;
+        padding: 20px;
+      }
+      .goods img {
+        width: 280px;
+        height: 200px;
+      }
+      .add-reduce-btn {
+        width: 20px;
+        height: 20px;
+        border: 1px rgb(214, 214, 214) solid;
+        border-radius: 2px;
+        cursor: pointer;
+      }
+      .del-btn {
+        width: 40px;
+      }
+      .submit-order {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+      }
+      .submit-order li {
+        margin-left: 40px;
+      }
+      .submit-order li .submit-btn {
+        width: 150px;
+        height: 30px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="box">
+      <div class="shopping-cart">
+        <input
+          type="checkbox"
+          v-model="isAll"
+          @change="handleIsAll"
+        />全选/全不选
+        <ul class="shopping-list">
+          <li
+            class="goods"
+            v-for="(goods,index) in shoppingList"
+            :key="goods.id"
+          >
+            <input
+              type="checkbox"
+              v-model="checkedList"
+              :value="goods.id"
+              @change="checkedGoods"
+            />
+            <img :src="goods.pic" alt="" />
+            <ul class="goods-info">
+              <li>商品名称：{{goods.name}}</li>
+              <li>
+                商品价格：<span style="color: red"
+                  >￥{{goods.price.toFixed(2)}}</span
+                >
+              </li>
+            </ul>
+            <div class="goods-num">
+              <button
+                @click="changeNum(goods,index)"
+                class="add-reduce-btn"
+                :disabled="goods.num===1"
+                >-</button
+              >
+              {{goods.num}}
+              <button
+                @click="changeNum(goods,index,'add')"
+                class="add-reduce-btn"
+                :disabled="goods.num===goods.limit"
+                >+</button
+              >
+            </div>
+            <div>
+              <button @click="delGoods(index)" class="del-btn">删除</button>
+            </div>
+          </li>
+        </ul>
+        <ul class="submit-order">
+          <li>
+            合计金额：<span style="color: red"
+              >￥{{totalAmount.toFixed(2)}}</span
+            >
+          </li>
+          <li>
+            <button class="submit-btn" :disabled="checkedList.length===0">
+              提交订单
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <script>
+      var obj = {
+        data() {
+          return {
+            isAll: false,
+            shoppingList: [
+              {
+                id: 1,
+                name: "西瓜",
+                price: 9.9,
+                num: 1,
+                limit: 10,
+                totalNum: 80,
+                pic: "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Finews.gtimg.com%2Fnewsapp_bt%2F0%2F13784765492%2F1000.jpg&refer=http%3A%2F%2Finews.gtimg.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659059564&t=4de4e83779c3b6bb35b1ea3799086d91",
+              },
+              {
+                id: 2,
+                name: "荔枝",
+                price: 20,
+                num: 1,
+                totalNum: 55,
+                limit: 10,
+                pic: "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fi0.hdslb.com%2Fbfs%2Farticle%2Fecd4e9eaa0dffa05d0652372004d8f3cc942c27c.jpg&refer=http%3A%2F%2Fi0.hdslb.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659059641&t=c9b51a73899523d66866c29025a718ee",
+              },
+              {
+                id: 3,
+                name: "芒果",
+                price: 15,
+                num: 1,
+                totalNum: 100,
+                limit: 20,
+                pic: "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.ke82.com%2F2021-02%2F3a9be41f2dab1d5a7e6a9d0a0461733e.jpg&refer=http%3A%2F%2Fimg.ke82.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659059667&t=b1638dd88420fcd9534bcdfc3a0356b9",
+              },
+              {
+                id: 4,
+                name: "葡萄",
+                price: 23,
+                num: 1,
+                totalNum: 6,
+                limit: 2,
+                pic: "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Ftyunfile.71360.com%2FUploadFile%2Fshanghaixuwei%2F637291533568652344%2F9403393.png&refer=http%3A%2F%2Ftyunfile.71360.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659059699&t=9aeb996dd98ac56d8f690a0486c688f5",
+              },
+            ],
+            checkedList: [],
+            totalAmount: 0,
+          };
+        },
+        methods: {
+          getTotalAmount() {
+            let amount = 0;
+            this.shoppingList
+              .filter((i) => this.checkedList.includes(i.id))
+              .forEach((element) => {
+                amount += element.price * element.num;
+              });
+            this.totalAmount = amount;
+          },
+          handleIsAll() {
+            this.checkedList = this.isAll
+              ? this.shoppingList.map((ele) => ele.id)
+              : [];
+          },
+          checkedGoods() {
+            this.isAll = this.checkedList.length === this.shoppingList.length;
+            this.getTotalAmount();
+          },
+          changeNum(goods, index, state = "reduce") {
+            if (state === "add") {
+              this.shoppingList[index].num++;
+              if (this.checkedList.includes(goods.id)) {
+                this.totalAmount += goods.price;
+              }
+            } else {
+              this.shoppingList[index].num--;
+              if (this.checkedList.includes(goods.id)) {
+                this.totalAmount -= goods.price;
+              }
+            }
+          },
+          delGoods(index) {
+            this.checkedList = this.checkedList.filter(
+              (i) => i !== this.shoppingList[index].id
+            );
+            this.shoppingList.splice(index, 1);
+            this.checkedGoods();
+          },
+        },
+      };
+      Vue.createApp(obj).mount("#box");
+    </script>
+  </body>
+</html>

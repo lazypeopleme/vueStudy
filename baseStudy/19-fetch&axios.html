@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="lib/vue.js"></script>
+  </head>
+  <body>
+    <div id="box">
+      <button @click="fetchUserInfo">获取用户数据</button>
+    </div>
+    <script>
+      new Vue({
+        el: "#box",
+        data: {},
+        watch: {},
+        methods: {
+          fetchUserInfo() {
+            // fetch要考虑浏览器兼容问题
+            fetch("http://127.0.0.1:5500/baseStudy/json/fetch.json")
+              .then((res) => {
+                console.log(res);
+                // 返回状态码等请求状态信息（Response）  status:200
+                return res.json();
+              })
+              .then((res) => {
+                // 返回请求的实际数据
+                console.log(res);
+              })
+              .catch((err) => {
+                // 捕获请求异常
+                console.log(err);
+              });
+
+            /*fetch的get方法传参
+            fetch("?name=hl&age=18")
+              .then((res) => res.json())
+              .then((res) => {
+                console.log(res);
+              });*/
+
+            /* fetch的post方法传参 
+            body请求体的选择：
+            （1）x-www-form-urlencoded , name=hl&age=18
+             (2)json , `{"name":"hl","age":18}`
+            */
+
+            /*post-1
+            fetch(url,{
+              method:'post',
+              headers:{
+                "Content-Type":"application/x-www-form-urlencoded"
+              },
+              body:"name=hl&age=18"
+            })
+              .then((res) => res.json())
+              .then((res) => {
+                console.log(res);
+              });
+            */
+
+            /*post-2
+            fetch("?name=hl&age=18",{
+              method:'post',
+              headers:{
+                "Content-Type":"application/json"
+              },
+              body:JSON.stringify({"name":"hl","age":18}) // 把json对象转为字符串
+            })
+              .then((res) => res.json())
+              .then((res) => {
+                console.log(res);
+              });
+            */
+          },
+        },
+        computed: {},
+      });
+    </script>
+  </body>
+</html>

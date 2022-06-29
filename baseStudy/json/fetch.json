@@ -1,0 +1,21 @@
+{
+    "userInfo": [
+        {
+            "uId": 1,
+            "uName": "hl",
+            "password": "123456"
+        },{
+            "uId": 2,
+            "uName": "cfp",
+            "password": "123456"
+        },{
+            "uId": 3,
+            "uName": "xs",
+            "password": "123456"
+        },{
+            "uId": 4,
+            "uName": "zjl",
+            "password": "123456"
+        }
+    ]
+}
