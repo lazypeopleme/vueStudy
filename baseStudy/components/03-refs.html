@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="../lib/vue.js"></script>
+  </head>
+  <body>
+    <div id="box">
+      <div>根组件标题</div>
+      <navbar
+        :navlist="navlist"
+        @myevent="toggleBgColor"
+        :current="current"
+      ></navbar>
+      <button @click="handleBtn">
+        获取并修改子组件的myname：{{childMyName}}
+      </button>
+      <difine-form
+        :navlist="navlist"
+        :current="current"
+        ref="difineForm"
+      ></difine-form>
+    </div>
+    <script>
+      /* ref 表单输入值获取与父子组件通信
+      1.绑定dom节点 ref='属性名'->this.$refs.属性名.value  可获取绑定dom的value值
+      2.绑定组件 ref='属性名'->this.$refs.ref名.子组件属性名 可获取与修改子组件属性值
+
+      ref的缺点：父组件可修改子组件的data，组件的私密性被破坏
+      */
+      var bus = new Vue();
+      Vue.component("navbar", {
+        props: {
+          navlist: Array,
+          current: {
+            type: Number,
+            default: 1,
+          },
+          toggleBgColor: Function,
+        },
+        template: `<ul style="list-style:none;display:flex;justify-content:space-between;width:350px;height:30px;align-items:center">
+            <li v-for="(navname,index) in navlist" :key="index"
+            :style="{width:'80px',height:'30px',lineHeight:'30px',textAlign:'center',cursor: 'pointer',backgroundColor:index===current?'green':'#ffffff'}"
+            @click="handleClick(index)">
+                <item :navname="navname" :current="current"></item>
+                </li>
+            </ul>`,
+        methods: {
+          handleClick(newCurrent) {
+            this.$emit("myevent", newCurrent);
+          },
+        },
+        components: {
+          item: {
+            props: ["navname"],
+            template: `<span style="inline-block;">{{navname}}</span>`,
+          },
+        },
+      });
+      Vue.component("difineForm", {
+        data() {
+          return {
+            myName: "子组件",
+          };
+        },
+        template: `<div>
+            用户名：<input type='text' ref='username' />
+            密码：<input type='number' ref='password' />
+            <button @click="handleLogin">登录</button>
+            <span>子组件的myname:{{myName}}</span>
+            </div>`,
+        methods: {
+          handleLogin() {
+            this.myName = this.$refs.username.value;
+            console.log(this.$refs.username.value, this.$refs.password.value);
+          },
+        },
+      });
+
+      new Vue({
+        el: "#box",
+        data: {
+          current: 1,
+          navlist: ["电影", "电视剧", "综艺", "动漫"],
+          childMyName: "",
+        },
+        methods: {
+          toggleBgColor(newCurrent) {
+            this.current = newCurrent;
+            console.log(newCurrent);
+          },
+          handleBtn() {
+            console.log(this.$refs.difineForm.myName); // myName为子组件的username值
+            this.childMyName = this.$refs.difineForm.myName;
+            this.$refs.difineForm.myName = "小红"; // 子组件的myName改为"小红"
+            console.log(this.$refs.difineForm.myName);
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

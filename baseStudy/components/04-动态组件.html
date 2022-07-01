@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="../lib/vue.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      #box {
+        margin: 20px 0px 0px 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="box">
+      <navbar
+        :navlist="navlist"
+        @myevent="toggleBgColor"
+        :current="current"
+      ></navbar>
+      <keep-alive><component :is="current"></component></keep-alive>
+    </div>
+    <script>
+      /* 动态组件 component 标签的 is 属性 */
+      /* 保留动态组件页面状态 keep-alive 标签 */
+      // 不加 keep-alive 标签切换组件时上一个组件会被销毁，切回去重新创建，切换前的状态不存在；加上 keep-alive 标签后切换组件时上一个组件只是被隐藏，切回去就显示，切换前的状态还存在
+      Vue.component("navbar", {
+        props: {
+          navlist: Array,
+          current: String,
+          toggleBgColor: Function,
+        },
+        template: `<ul style="list-style:none;display:flex;justify-content:space-between;width:250px;height:30px;align-items:center">
+            <li v-for="item in navlist" :key="item.tId"
+            :style="{width:'80px',height:'30px',lineHeight:'30px',textAlign:'center',cursor: 'pointer',backgroundColor:item.tValue===current?'green':'#ffffff'}"
+            @click="handleClick(item.tValue)">
+                <span style="inline-block;">{{item.text}}</span>
+                </li>
+            </ul>`,
+        methods: {
+          handleClick(newCurrent) {
+            this.$emit("myevent", newCurrent);
+          },
+        },
+      });
+      Vue.component("home", {
+        template: `<div>首页：<input type='text' /></div>`,
+      });
+      Vue.component("list", {
+        template: `<div>列表</div>`,
+      });
+      Vue.component("shopcar", {
+        template: `<div>购物车</div>`,
+      });
+      new Vue({
+        el: "#box",
+        data: {
+          current: "home",
+          navlist: [
+            { tId: 1, tValue: "home", text: "首页" },
+            { tId: 2, tValue: "list", text: "列表" },
+            { tId: 3, tValue: "shopcar", text: "购物车" },
+          ],
+        },
+        methods: {
+          toggleBgColor(newCurrent) {
+            this.current = newCurrent;
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

@@ -5,11 +5,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <script src="lib/vue.js"></script>
+    <script src="../lib/vue.js"></script>
+    <script src="../lib/axios.min.js"></script>
   </head>
   <body>
     <div id="box">
-      <button @click="fetchUserInfo">获取用户数据</button>
+      <button @click="fetchUserInfo">fetch获取用户数据</button>
+      <button @click="getInfoFromAxios">axios获取用户数据</button>
     </div>
     <script>
       new Vue({
@@ -17,8 +19,29 @@
         data: {},
         watch: {},
         methods: {
+          getInfoFromAxios() {
+            // 第三方非标准库，基于xhr，需引入
+            axios
+              .get("http://127.0.0.1:5500/baseStudy/json/axios.json")
+              .then((res) => {
+                console.log(res);
+                // res.data对象包含返回的json数据
+                var films = res.data.films;
+                console.log(films);
+              });
+
+            /*
+            get方法 ?name=hl&age=18
+            axios.get("?name=hl&age=18").then(res=>res.data)
+
+            post方法
+            body请求体的选择：
+            （1）x-www-form-urlencoded , name=hl&age=18  axios.post(url,'name=hl&age=18').then(res=>res.data)
+            （2）json , `{"name":"hl","age":18}`   axios.post(url,{"name":"hl","age":18}).then(res=>res.data)
+              */
+          },
           fetchUserInfo() {
-            // fetch要考虑浏览器兼容问题
+            // fetch要考虑浏览器兼容问题，浏览器支持，不用引入（promise封装）
             fetch("http://127.0.0.1:5500/baseStudy/json/fetch.json")
               .then((res) => {
                 console.log(res);
