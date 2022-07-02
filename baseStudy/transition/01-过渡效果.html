@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="../lib/vue.js"></script>
+    <style>
+      /* 进场动画 */
+      .hl-enter-active {
+        animation: hl 0.5s;
+      }
+      /* 离场动画animation */
+      .hl-leave-active {
+        animation: hl 0.5s reverse;
+      }
+      @keyframes hl {
+        0% {
+          opacity: 0;
+          transform: translateX(100px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateX(0px);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="box">
+      <div>
+        <button @click="isShow=!isShow">{{isShow?'隐藏':'显示'}}</button>
+      </div>
+      <!-- <transition
+        enter-active-class="hl-enter-active"
+        leave-active-class="hl-leave-active"
+        appear
+      >
+        <p v-if="isShow" key="1">电影-------111</p>
+        <p v-else key="2">电影-------222</p>
+      </transition> -->
+      <!-- 动画类的简写  name="样式统一前缀"  多个同类dom切换时要用key设置唯一性，否则vue为了效率只会替换相同标签内部的内容-->
+      <!-- mode: in-out（先进再走） / out-in（先走再进）/lefttoright /......-->
+      <transition name="hl" appear mode="in-out">
+        <p v-if="isShow">电影-------111</p>
+        <div v-else>电影-------222</div>
+        <!-- <p v-if="isShow" key="1">电影-------111</p>
+        <p v-else key="2">电影-------222</p> -->
+      </transition>
+    </div>
+    <script type="text/javascript">
+      new Vue({
+        el: "#box",
+        data: { isShow: true },
+        methods: {
+          change(key) {
+            this.key = key;
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

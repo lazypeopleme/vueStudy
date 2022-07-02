@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="../lib/vue.js"></script>
+  </head>
+  <body>
+    <div id="box">
+      <div id="title">{{title}} <button @click="change">修改</button></div>
+      <child @hidden="handleHidden" v-if="isShow"></child>
+    </div>
+    <script type="text/javascript">
+      Vue.component("child", {
+        template: `<div>倒计时:{{time}}</div>`,
+        data() {
+          return {
+            time: 10,
+          };
+        },
+        mounted() {
+          // setTimeout只运行一次，也就是说设定的时间到后就触发运行指定代码，运行完后即结束；
+          // 而etinterval是一直循环运行下去，即每到设定时间间隔就触发指定代码，要想停止，需要使用clearInterval()函数。
+          this.timer = setInterval(() => {
+            this.time--;
+          }, 1000);
+        },
+        updated() {
+          if (this.time === 0) {
+            this.$emit("hidden");
+          }
+        },
+        beforeDestroy() {
+          // 清除定时器，事件解绑等等
+          clearInterval(this.timer);
+          console.log("child will destrory");
+        },
+        destroyed() {
+          console.log("child had destroryed");
+        },
+      });
+      /* 生命周期函数 */
+      //   vue 的 template 优先于 el 绑定的 dom
+      new Vue({
+        el: "#box",
+        data: {
+          title: "vue",
+          isShow: true,
+        },
+        methods: {
+          change() {
+            this.title = "react";
+          },
+          handleHidden() {
+            this.isShow = false;
+          },
+        },
+        beforeCreate() {
+          // vue实例创建前
+          console.log("beforeCreate", this.title);
+        },
+        created() {
+          // vue实例创建完成，可获取到data等数据，进行一些初始化操作
+          console.log("created", this.title);
+          this.title = this.title + "-hello";
+        },
+        beforeMount() {
+          // vue挂载到dom之前，模板解析之前最后一次修改模板节点
+          console.log("beforeMount");
+        },
+        mounted() {
+          // vue挂载完成后，依赖于dom节点创建之后的操作，只执行一次
+          console.log("mounted");
+        },
+        beforeUpdate() {
+          // 状态更新前，记录老的dom的某些状态
+          console.log("beforeUpdate");
+        },
+        updated() {
+          // 状态更新后，如异步获取到后端传来的数据进行的dom更新
+          console.log("updated");
+        },
+        beforeDestory() {
+          console.log("beforeDestory");
+          // 实例销毁前
+        },
+        destroyed() {
+          // 实例销毁后
+        },
+      });
+    </script>
+  </body>
+</html>

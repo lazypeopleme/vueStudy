@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="../lib/vue.js"></script>
+    <style>
+      /* 进场动画 */
+      .hl-enter-active {
+        animation: hl 0.5s;
+      }
+      /* 离场动画animation */
+      .hl-leave-active {
+        animation: hl 0.5s reverse;
+      }
+      @keyframes hl {
+        0% {
+          opacity: 0;
+          transform: translateX(100px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateX(0px);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="box">
+      <!-- v-model 数据双向绑定，绑定input的value值 -->
+      <input type="text" v-model="inputText" />
+      <button @click="handleSearch">search</button>
+      <button @click="handleAdd">add</button>
+      <button @click="handleClear">clear</button>
+      <!-- key如果设置为数组的下标index，删除一行数据后，老的虚拟dom与新的虚拟dom相同的key的内容不同被认为发生修改，导致动画效果一直出现在最后一行。key的设置要慎重 -->
+      <ul v-if="datalist.length>0">
+        <!-- transition-group：可包含多个节点。通常实例化为span标签，也可通过tag属性实例化为其他标签-->
+        <transition-group name="hl" tag="ul">
+          <li
+            v-for="(item,index) in datalist"
+            v-if="item.isShow||!inputText"
+            :key="item.key"
+          >
+            {{item.value}} <button @click="handleDel(index)">del</button>
+          </li></transition-group
+        >
+      </ul>
+      <div v-else>无待办事项</div>
+    </div>
+    <script>
+      new Vue({
+        el: "#box",
+        data: {
+          inputText: "",
+          datalist: [
+            { key: 1, isShow: true, value: "111" },
+            { key: 2, isShow: true, value: "aaa" },
+            { key: 3, isShow: true, value: "dbf" },
+            { key: 4, isShow: true, value: "bbb" },
+          ],
+        },
+        methods: {
+          handleAdd() {
+            if (this.inputText) {
+              this.datalist.push({ isShow: true, value: this.inputText });
+              this.inputText = "";
+            }
+          },
+          handleDel(ind) {
+            this.datalist.splice(ind, 1);
+          },
+          handleClear() {
+            this.inputText = "";
+          },
+          handleSearch() {
+            this.datalist.forEach((ele, ind) => {
+              // 字符串的search方法，没找到返回-1
+              console.log(ele.value.search(this.inputText));
+              this.datalist[ind].isShow =
+                ele.value.search(this.inputText) === -1 ? false : true;
+            });
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

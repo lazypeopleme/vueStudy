@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="../lib/vue.js"></script>
+  </head>
+  <body>
+    <div id="box">
+      <!-- 旧版用法 dom.slot="name"-->
+      <navbar>
+        <button slot="left">按钮</button>
+        <i slot="right">图标</i>
+      </navbar>
+      <!-- 新版用法 template.v-slot:name / template.#name -->
+      <navbar>
+        <template v-slot:left><button>按钮</button></template>
+        <template #right><i>图标</i></template>
+      </navbar>
+      <br />
+      <!-- 案例 -->
+      <control-btn>
+        <template #btn>
+            <button @click="isShow=!isShow">{{isShow?'隐藏':'显示'}}</button>
+        </template>
+      </control-btn>
+      <sidebar :is-show="isShow"></sidebar>
+    </div>
+    <script type="text/javascript">
+      /* 插槽(内容分发)：slot 提高组件复用性，扩展组件能力
+        占位置： <slot name=''></slot>
+        显示：dom.slot="name" / template.v-slot:name / template.#name
+        */
+      Vue.component("navbar", {
+        template: `<div>
+                <slot name='left'></slot>
+                <span>qqq</span>
+                <slot name='right'></slot>
+                </div>`,
+      });
+      Vue.component("controlBtn", {
+        template: `<div>
+                <slot name='btn'></slot>
+                </div>`,
+      });
+      Vue.component("sidebar", {
+        props:['isShow'],
+        data() {
+          return { navlist: ["电影", "电视剧", "综艺", "动漫"] };
+        },
+        template: `<ul style="background:yellow" v-show="isShow">
+                <li v-for="(item,index) in navlist" :key="index">{{item}}</li>
+                </ul>`,
+      });
+      new Vue({
+        el: "#box",
+        data: {isShow:false},
+        methods: {},
+      });
+    </script>
+  </body>
+</html>
