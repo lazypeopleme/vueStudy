@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="../lib/vue.next.js"></script>
+  </head>
+  <body>
+    <div id="box">
+        <button @click="isShow=!isShow">销毁</button>
+      <navbar :my-name="myname" v-if="isShow"></navbar>
+    </div>
+    <script type="text/javascript">
+      var obj = {
+        data() {
+          return {
+            myname: "hl",
+            isShow: true,
+          };
+        },
+        created() {
+          console.log("created");
+        },
+        beforeMount() {
+          console.log("beforeMount");
+        },
+        mounted() {
+          console.log("mounted");
+        },
+      };
+      var app = Vue.createApp(obj);
+      app.component("navbar", {
+        props: ["myName"],
+        template: `<div>{{myName}}</div>`,
+        data() {
+          return {};
+        },
+        beforeUnmount() {
+          // vue3-beforeUnmount：vue2-beforeDestroy
+          console.log("beforeUnmount");
+        },
+        unmounted() {
+          // vue3-unmounted：vue2-destroyed
+          console.log("unmounted");
+        },
+      });
+      app.mount("#box");
+    </script>
+  </body>
+</html>

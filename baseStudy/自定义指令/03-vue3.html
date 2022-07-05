@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../lib/swiper/swiper-bundle.min.css" />
+    <title>Document</title>
+    <script src="../lib/swiper/swiper-bundle.min.js"></script>
+    <script src="../lib/vue.next.js"></script>
+    <style>
+      .swiper {
+        width: 600px;
+        height: 300px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="box">
+      <swiper>
+        <swiper-item
+          v-for="(i,index) in dataList"
+          :key="i"
+          v-swiper="{index,length:dataList.length}"
+        >
+          <img :src="'../images/nature-'+i+'.jpg'" alt="" />
+        </swiper-item>
+      </swiper>
+    </div>
+
+    <script type="text/javascript">
+      var obj = {
+        data() {
+          return { dataList: [] };
+        },
+        mounted() {
+          this.dataList = ["1", "2", "3", "4"];
+        },
+      };
+      var app = Vue.createApp(obj);
+
+      app.component("swiperItem", {
+        template: `<div class="swiper-slide">
+            <slot></slot>
+          </div>`,
+      });
+      app.component("swiper", {
+        props: ["id"],
+        template: `<div class="swiper" :id="id">
+        <div class="swiper-wrapper">
+          <slot></slot>
+        </div>
+        <!-- 如果需要分页器 -->
+        <div class="swiper-pagination"></div>
+
+        <!-- 如果需要导航按钮 -->
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+
+        <!-- 如果需要滚动条 -->
+        <!-- <div class="swiper-scrollbar"></div> -->
+      </div>`,
+        mounted() {},
+      });
+      var initSwiper = (index, length) => {
+        if (length - 1 === index) {
+          new Swiper(".swiper", {
+            loop: true, // 循环模式选项
+            autoplay: true, //自动播放
+
+            // 如果需要分页器
+            pagination: {
+              el: ".swiper-pagination",
+            },
+
+            // 如果需要前进后退按钮
+            navigation: {
+              nextEl: ".swiper-button-next",
+              prevEl: ".swiper-button-prev",
+            },
+
+            // 如果需要滚动条
+            // scrollbar: {
+            //   el: ".swiper-scrollbar",
+            // },
+          });
+        }
+      };
+      // vue3中 指令生命周期 约等于 组件生命周期
+      app.directive("swiper", {
+        mounted(el, binding) {
+          const { index, length } = binding.value;
+          //   当最后一个轮播元素加载完就实例化swiper
+          initSwiper(index, length);
+          console.log("创建或更新都执行");
+        },
+      });
+      app.mount("#box");
+    </script>
+  </body>
+</html>

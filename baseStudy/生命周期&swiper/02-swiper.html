@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../lib/swiper/swiper-bundle.min.css" />
+    <title>Document</title>
+    <script src="../lib/swiper/swiper-bundle.min.js"></script>
+    <script src="../lib/vue.js"></script>
+    <style>
+      .swiper {
+        width: 600px;
+        height: 300px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="box">
+      <!-- 解决dom初始化早于swiper 产生的bug：1.给swiper组件设置:key值="dataList.length"；2.给swiper组件设置v-if="dataList.length"；3.nextTick——》使得dataList状态更新时swiper也重新渲染-->
+      <!-- 多个swiper要设置id值唯一性 -->
+      <!--  设置key值-->
+      <swiper v-if="dataList.length" id="swiper1">
+        <swiper-item v-for="i in dataList" :key="i">
+          <img :src="'../images/nature-'+i+'.jpg'" alt="" />
+        </swiper-item>
+      </swiper>
+      <!-- 组件设置v-if -->
+      <swiper :key="dataList.length" id="swiper2">
+        <swiper-item v-for="i in dataList" :key="i">
+          <img :src="'../images/nature-'+i+'.jpg'" alt="" />
+        </swiper-item>
+      </swiper>
+      <!-- nextTick -->
+      <swiper id="swiper3">
+        <swiper-item v-for="i in dataList" :key="i">
+          <img :src="'../images/nature-'+i+'.jpg'" alt="" />
+        </swiper-item>
+      </swiper>
+    </div>
+
+    <script type="text/javascript">
+      // https://www.swiper.com.cn/api/autoplay/16.html  swiper API文档
+      // dom加载完再初始化swiper
+
+      Vue.component("swiperItem", {
+        template: `<div class="swiper-slide">
+            <slot></slot>
+          </div>`,
+      });
+      Vue.component("swiper", {
+        props: ["id"],
+        template: `<div class="swiper" :id="id">
+        <div class="swiper-wrapper">
+          <slot></slot>
+        </div>
+        <!-- 如果需要分页器 -->
+        <div class="swiper-pagination"></div>
+
+        <!-- 如果需要导航按钮 -->
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+
+        <!-- 如果需要滚动条 -->
+        <!-- <div class="swiper-scrollbar"></div> -->
+      </div>`,
+      });
+
+      new Vue({
+        el: "#box",
+        data: { dataList: [] },
+        methods: {},
+        mounted() {
+          this.dataList = ["1", "2", "3", "4"];
+          this.$nextTick(() => {
+            console.log("我比updated执行还晚,且只执行一次");
+            new Swiper(".swiper", {
+              // direction: "vertical", // 水平垂直切换选项
+              loop: true, // 循环模式选项
+              autoplay: true, //自动播放
+
+              // 如果需要分页器
+              pagination: {
+                el: ".swiper-pagination",
+              },
+
+              // 如果需要前进后退按钮
+              navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+              },
+
+              // 如果需要滚动条
+              // scrollbar: {
+              //   el: ".swiper-scrollbar",
+              // },
+            });
+          });
+        },
+        updated() {
+          console.log("updated");
+        },
+      });
+    </script>
+  </body>
+</html>

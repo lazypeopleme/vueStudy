@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="../lib/vue.js"></script>
+  </head>
+  <body>
+    <div id="box">
+      <!-- 指令的使用：v-指令名  -->
+      <div v-color>1111</div>
+      <div v-color="'yellow'">222</div>
+      <div><button @click="changeColor">设置蓝色背景</button></div>
+      <div v-color="color">333</div>
+    </div>
+    <script type="text/javascript">
+      // 自定义指令操作底层dom
+      Vue.directive("color", {
+        inserted(el, binding) {
+          // 指令第一次插入到节点上触发
+          // el: 指令插入的dom节点
+          // binding: 指令绑定的变量，{}
+          console.log("inserted", el, binding);
+          el.style.backgroundColor = binding.value || "red";
+        },
+        update(el, binding) {
+          // 指令值更新触发
+          console.log("update", el, binding);
+          el.style.backgroundColor = binding.value;
+        },
+        // 还有许多钩子函数，参考api文档：bind() unbind() ......
+      });
+      new Vue({
+        el: "#box",
+        data: { color: "" },
+        methods: {
+          changeColor() {
+            this.color = "blue";
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

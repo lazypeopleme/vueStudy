@@ -35,10 +35,10 @@
         beforeDestroy() {
           // 清除定时器，事件解绑等等
           clearInterval(this.timer);
-          console.log("child will destrory");
+          console.log("child will destroy");
         },
         destroyed() {
-          console.log("child had destroryed");
+          console.log("child had destroyed");
         },
       });
       /* 生命周期函数 */
@@ -82,7 +82,7 @@
           // 状态更新后，如异步获取到后端传来的数据进行的dom更新
           console.log("updated");
         },
-        beforeDestory() {
+        beforeDestroy() {
           console.log("beforeDestory");
           // 实例销毁前
         },
